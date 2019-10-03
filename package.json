@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/SidH80/Bamazon#readme",
   "dependencies": {
+    "chalk": "^2.4.2",
+    "cli-table": "^0.3.1",
     "inquirer": "^7.0.0",
     "mysql": "^2.17.1"
   }
