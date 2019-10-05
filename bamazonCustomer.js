@@ -33,14 +33,13 @@ connection.connect(function(err) {
   });
 
 function loadProducts() {
-    connection.query("SELECT * FROM products", function(err, res) {
+    connection.query("SELECT id, product, department, price, quantity FROM inventory", function(err, res) {
     if(err) throw err;
 
     //displays items
     console.table(res);
     //the prompt the customer for an item
     promptCustomerForItem();
-    connection.end();
     })
 }
 
@@ -48,8 +47,8 @@ function promptCustomerForItem() {
     //Ask the customer the ID of the product they would like to buy.
     inquirer
         .prompt([
-            {
-            name: "item_id",
+        {
+            name: "id",
             type: "input",
             message: "Please enter the ID of the item you'd like to purchase",
             validate: function(value) {
@@ -57,26 +56,27 @@ function promptCustomerForItem() {
                   return true;
                 }
                 return false;
-                }
             }
+        }
         ])
         .then(function(answer) {
-            console.log(answer.item_id);
-            var query = `SELECT id FROM products WHERE ?`
-            connection.query(query, answer.item_id, function(err, res){
+            console.log(answer.id);
+            var query = "SELECT * FROM inventory WHERE ?";
+            connection.query(query, {id: answer.id }, function(err, res) {
+                if (err) throw err;
                 console.table(res);
+                promptQuantity();
             })
-            promptQuantity();
         });
 
-}
+    };
 
 
-function promptQuantity (item_id){
-    inquirer
+    function promptQuantity (){
+        inquirer
         .prompt([
         {
-            name: "item_quantity",
+            name: "quantity",
             type: "input",
             message: "How many items would you like to purchase?",
             validate: function(value) {
@@ -84,12 +84,16 @@ function promptQuantity (item_id){
                 return true;
                 }
                 return false;
-                }
+            }
         }
         ])
         .then(function(answer) {
-            console.log(answer.item_quantity)
-            checkInventory();
+            var query = "SELECT * FROM inventory WHERE ?"
+            connection.query(query, {id: answer.id }, function(err, res) {
+                if (err) throw err;
+                console.table(res);
+            })
+            //checkInventory();
         });
 
 

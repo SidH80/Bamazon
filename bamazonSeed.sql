@@ -12,23 +12,37 @@ CREATE TABLE products (
     PRIMARY KEY (id)
 );
 
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Porsche", "Automobile", "95000", 25);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Corvette", "Automobile", "65000", 25);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Toothbrush", "Oral", "2.50", 105);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Pen", "Suplies", "1.99", 100);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("TV", "Electronics", "850.99", 90);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Sofa", "Furniture", "899.99", 5);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Table", "Furniture", "450.99", 65);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Laptop", "Computers", "1200", 2);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Headphones", "Accessories", "49.99", 25);
-INSERT INTO products (product, department, price, quantity)
-VALUES ("Samsung S9", "Cell", "1200", 5);
+use bamazon_db;
+
+insert into inventory (product, department, price, quantity)
+values("widget", "Supplies", .99, 100);
+
+insert into inventory (product, department, price, quantity)
+values("Steinway", "Instruments", 30000, 10);
+
+insert into inventory (product, department, price, quantity)
+values("Porsche", "Automobile", 81000, 10);
+
+insert into inventory (product, department, price, quantity)
+values("Corvette", "Automobile", 65095, 15);
+
+insert into inventory (product, department, price, quantity)
+values("Pen", "Supplies", 2.99, 100);
+
+insert into inventory (product, department, price, quantity)
+values("Selmer", "Instruments", 3295.99, 20);
+
+insert into inventory (product, department, price, quantity)
+values("Laptop", "Computer", 1500, 40);
+
+insert into inventory (product, department, price, quantity)
+values("Headphones", "Accessories", 45, 75);
+
+insert into inventory (product, department, price, quantity)
+values("Perfume", "Fragrances", 55.99, 35);
+
+insert into inventory (product, department, price, quantity)
+values("Jeans", "Clothing", 120.99, 11);
+
+insert into inventory (product, department, price, quantity)
+values("Pumps", "Shoes", 199.99, 22);
