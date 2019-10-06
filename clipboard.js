@@ -1,14 +1,3 @@
-//Ask WHat would you like to do?
-//Display Items in a nice formed table
-//Prompt User for ID item off the table
-//Prompt please enter a quantity that you'd like to purchase
-    //Make a decision - do we have enough?
-        //if yes log great
-            //show total cost and update database
-                //exit
-        //if not log error message
-            //re-prompt
-
 //initialize dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
@@ -51,7 +40,7 @@ function loadProducts() {
     //the prompt the customer for an item
     promptCustomerForItem();
     })
-}
+};
 
 function promptCustomerForItem() {
 
