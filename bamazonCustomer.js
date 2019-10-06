@@ -92,7 +92,8 @@ function promptQuantity (){
     .then(function(answer) {
 
         var query = "SELECT * FROM inventory WHERE ?";
-            connection.query(query, {id: chosenItem }, function(err, res) {
+            connection.query(query, {id: chosenItem },
+                function(err, res) {
                 if (err) throw err;
 
                 //if item is available then complete the purchase

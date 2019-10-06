@@ -19,7 +19,7 @@ connection.connect(function(err) {
     if (err) throw err;
     console.log(``);
     console.log(`Connected as id ${connection.threadId}`);
-    displayHeader();
+    start();
   });
 
 function displayHeader() {
@@ -34,6 +34,10 @@ function displayHeader() {
     console.log(`(==================================================================)`);
     console.log(`(==================================================================)`);
     console.log(``);
+}
+
+function start() {
+    displayHeader();
 
     inquirer
     .prompt({
@@ -84,8 +88,8 @@ function viewProducts(){
         //displays items
         console.table(res);
         //the prompt the customer for an item
-        displayHeader();
     })
+    start();
 };
 
 function lowInventory(){
@@ -96,17 +100,78 @@ function lowInventory(){
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
             if (res[i].quantity < 5) {
-            console.table(res[i]);
-            }
+            lowInv.push(res[i]);
         }
-        displayHeader();
+        console.table(lowInv);
+        }
+        start();
     })
 };
 
 function addInventory(){
+    connection.query("SELECT * FROM inventory", function(err, res) {
+        console.log(``);
+        if(err) throw err;
+        //displays items
+        console.table(res);
+        //the prompt the customer for an item
+    })
     // display a prompt that will let the manager "add more" of any item currently in the store.
+    inquirer
+    .prompt([
+      {
+        name: "id",
+        type: "input",
+        message: "Which item count to increase?",
+        validate: function(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          }
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How many items are you adding to the count?",
+        validate: function(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          }
+      }
+    ])
+    .then(function(answer) {
+        chosenItem = answer.id;
+        var query = "SELECT * FROM inventory WHERE ?";
+        connection.query(query, {id: chosenItem },
+            function(err, res) {
+            if (err) throw err;
+                //updates the quantity available in inventory
+                connection.query(
+                    "UPDATE inventory SET ? WHERE ?",
+                    [
+                        {
+                            quantity: (res[0].quantity + parseInt(answer.quantity))
+                        },
+                        {
+                            id: chosenItem
+                        }
+                    ],
+                    function(error) {
+                        if(err) throw err;
+                        console.table(res);
+                        console.log(`${answer.quantity} ${res[0].product}(s) updated. Updated quantity is ${res[0].quantity}`);
+                        start();
+                    }
+                )
+            }
+        )
+    })
 };
 
 function addNewProduct(){
     // add a completely new product to the store.
+    start();
 };
