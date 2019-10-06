@@ -12,23 +12,8 @@
 //initialize dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var Table = require('cli-table');
 
 var chosenItem;
-
-//initiate new table
-var table = new Table({
-    head: ['TH 1 label', 'TH 2 label', 'TH 3 label', 'TH 4 label', 'TH 5 label']
-  , colWidths: [20, 20, 20]
-});
-
-// table is an Array, so you can `push`, `unshift`, `splice` and friends
-table.push(
-    ['First value', 'Second value', 'Third value', 'Fourth value', 'Fifth value' ],
-    ['First value', 'Second value', 'Third value', 'Fourth value', 'Fifth value' ]
-);
-
-console.log(table.toString());
 
 // initialize connection variable for mysql database
 var connection = mysql.createConnection ({
@@ -119,7 +104,7 @@ function promptQuantity (){
             connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
                 if (answer.quantity <= res[0].quantity) {
-                    console.log(`${answer.quantity} ${res[0].product} purchased! Your final price is $${parseFloat(answer.quantity * res[0].price)}. Thank yor for shopping at Bamazon!`);
+                    console.log(`${answer.quantity} ${res[0].product}(s) purchased! Your final price is $${parseFloat(answer.quantity * res[0].price)}. Thank yor for shopping at Bamazon!`);
                     connection.query(
                         "UPDATE inventory SET ? WHERE ?",
                         [

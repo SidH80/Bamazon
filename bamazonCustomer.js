@@ -1,34 +1,8 @@
-//Ask WHat would you like to do?
-//Display Items in a nice formed table
-//Prompt User for ID item off the table
-//Prompt please enter a quantity that you'd like to purchase
-    //Make a decision - do we have enough?
-        //if yes log great
-            //show total cost and update database
-                //exit
-        //if not log error message
-            //re-prompt
-
 //initialize dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var Table = require('cli-table');
 
 var chosenItem;
-
-//initiate new table
-var table = new Table({
-    head: ['TH 1 label', 'TH 2 label', 'TH 3 label', 'TH 4 label', 'TH 5 label']
-  , colWidths: [20, 20, 20]
-});
-
-// table is an Array, so you can `push`, `unshift`, `splice` and friends
-table.push(
-    ['First value', 'Second value', 'Third value', 'Fourth value', 'Fifth value' ],
-    ['First value', 'Second value', 'Third value', 'Fourth value', 'Fifth value' ]
-);
-
-console.log(table.toString());
 
 // initialize connection variable for mysql database
 var connection = mysql.createConnection ({
@@ -51,6 +25,7 @@ function loadProducts() {
     connection.query("SELECT * FROM inventory", function(err, res) {
     if(err) throw err;
 
+    //Prints Store Header
     console.log(``);
     console.log(`(==================================================================)`)
     console.log(`(==================================================================)`)
@@ -63,7 +38,7 @@ function loadProducts() {
 
     //displays items
     console.table(res);
-    //the prompt the customer for an item
+    //function prompts the customer for an item
     promptCustomerForItem();
     })
 }
@@ -87,6 +62,7 @@ function promptCustomerForItem() {
         ])
         .then(function(answer) {
             chosenItem = answer.id;
+            //selects item id from the database
             var query = "SELECT * FROM inventory WHERE ?";
             connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
@@ -116,11 +92,14 @@ function promptQuantity (){
     .then(function(answer) {
 
         var query = "SELECT * FROM inventory WHERE ?";
-        console.log(chosenItem);
             connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
+
+                //if item is available then complete the purchase
                 if (answer.quantity <= res[0].quantity) {
-                    console.log(`Your final price is $${parseFloat(answer.quantity * res[0].price)}. Purchase complete. Thank yor for shopping at Bamazon!`);
+                    console.log(`${answer.quantity} ${res[0].product}(s) purchased! Your final price is $${parseFloat(answer.quantity * res[0].price)}. Thank yor for shopping at Bamazon!`);
+
+                    //updates the quantity available in inventory
                     connection.query(
                         "UPDATE inventory SET ? WHERE ?",
                         [
@@ -136,33 +115,12 @@ function promptQuantity (){
                             loadProducts();
                         }
                     )
+
+                // if quantity unavailable then prompt quantity again
                 } else {
                     console.log(`Insufficient quantity. Please select a valid quantity.`);
                     promptQuantity();
                 }
             })//checkInventory();
     });
-
-
-
-}
-
-function makePurchase() {
-
-}
-
-//check inventory to see if userChoice exists in inventory
-    //use a for loop and a comparison
-function checkInventory() {
-
-    //if we have enough items to sell {
-        //multiply item_quantity by price and log amount of purchase
-    //} else {
-        //re-prompt how many more items how many would you like to purchase
-    //}
-}
-
-//check to see if the user wants to exit
-function exitProgram() {
-
 }
