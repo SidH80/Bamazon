@@ -14,6 +14,8 @@ var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
 
+var chosenItem;
+
 //initiate new table
 var table = new Table({
     head: ['TH 1 label', 'TH 2 label', 'TH 3 label', 'TH 4 label', 'TH 5 label']
@@ -81,7 +83,24 @@ function promptCustomerForItem() {
                 }
                 return false;
             }
-        },
+        }
+        ])
+        .then(function(answer) {
+            chosenItem = answer.id;
+            var query = "SELECT * FROM inventory WHERE ?";
+            connection.query(query, {id: chosenItem }, function(err, res) {
+                if (err) throw err;
+             console.table(res);
+             promptQuantity();
+            })
+        });
+
+};
+
+
+function promptQuantity (){
+    inquirer
+    .prompt([
         {
             name: "quantity",
             type: "input",
@@ -93,10 +112,12 @@ function promptCustomerForItem() {
                 return false;
             }
         }
-        ])
-        .then(function(answer) {
-            var query = "SELECT * FROM inventory WHERE ?";
-            connection.query(query, {id: answer.id }, function(err, res) {
+    ])
+    .then(function(answer) {
+
+        var query = "SELECT * FROM inventory WHERE ?";
+        console.log(chosenItem);
+            connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
                 if (answer.quantity <= res[0].quantity) {
                     console.log(`Your final price is $${parseFloat(answer.quantity * res[0].price)}. Purchase complete. Thank yor for shopping at Bamazon!`);
@@ -107,7 +128,7 @@ function promptCustomerForItem() {
                                 quantity: (res[0].quantity - answer.quantity)
                             },
                             {
-                                id: answer.id
+                                id: chosenItem
                             }
                         ],
                         function(error) {
@@ -116,37 +137,10 @@ function promptCustomerForItem() {
                         }
                     )
                 } else {
-                    console.log("Insufficient quantity");
+                    console.log(`Insufficient quantity. Please select a valid quantity.`);
+                    promptQuantity();
                 }
-            })
-        });
-};
-
-
-function promptQuantity (){
-    inquirer
-    .prompt([
-    {
-        name: "quantity",
-        type: "input",
-        message: "How many items would you like to purchase?",
-        validate: function(value) {
-            if (isNaN(value) === false) {
-            return true;
-            }
-            return false;
-        }
-    }
-    ])
-    .then(function(answer) {
-        var query = "SELECT * FROM inventory WHERE ?";
-        connection.query(query, {id: answer.id }, function(err, res) {
-            if (err) throw err;
-            console.log(res[0].id);
-            console.table([0].quantity);
-
-        })
-        //checkInventory();
+            })//checkInventory();
     });
 
 
