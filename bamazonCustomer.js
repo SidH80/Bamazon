@@ -13,7 +13,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
-
 // initialize connection variable for mysql database
 
 var connection = mysql.createConnection ({
@@ -36,6 +35,16 @@ function loadProducts() {
     connection.query("SELECT id, product, department, price, quantity FROM inventory", function(err, res) {
     if(err) throw err;
 
+    console.log(``);
+    console.log(`(==================================================================)`)
+    console.log(`(==================================================================)`)
+    console.log(``);
+    console.log(`                           Welcome to Bamazon!          `);
+    console.log(``);
+    console.log(`(==================================================================)`);
+    console.log(`(==================================================================)`);
+    console.log(``);
+
     //displays items
     console.table(res);
     //the prompt the customer for an item
@@ -44,6 +53,7 @@ function loadProducts() {
 }
 
 function promptCustomerForItem() {
+
     //Ask the customer the ID of the product they would like to buy.
     inquirer
         .prompt([
@@ -57,24 +67,7 @@ function promptCustomerForItem() {
                 }
                 return false;
             }
-        }
-        ])
-        .then(function(answer) {
-            console.log(answer.id);
-            var query = "SELECT * FROM inventory WHERE ?";
-            connection.query(query, {id: answer.id }, function(err, res) {
-                if (err) throw err;
-                console.table(res);
-                promptQuantity();
-            })
-        });
-
-    };
-
-
-    function promptQuantity (){
-        inquirer
-        .prompt([
+        },
         {
             name: "quantity",
             type: "input",
@@ -88,13 +81,63 @@ function promptCustomerForItem() {
         }
         ])
         .then(function(answer) {
-            var query = "SELECT * FROM inventory WHERE ?"
+            console.log(answer.id);
+            console.log(answer.quantity);
+            var query = "SELECT * FROM inventory WHERE ?";
             connection.query(query, {id: answer.id }, function(err, res) {
                 if (err) throw err;
-                console.table(res);
+                console.log(res[0].quantity);
+                if (answer.quantity <= res[0].quantity) {
+                    console.log(`Your final price is $${parseFloat(answer.quantity * res[0].price)}. Purchase complete. Thank yor for shopping at Bamazon!`);
+                    connection.query(
+                        "UPDATE inventory SET ? WHERE ?",
+                        [
+                            {
+                                quantity: (res[0].quantity - answer.quantity)
+                            },
+                            {
+                                id: answer.id
+                            }
+                        ],
+                        function(error) {
+                            if (error) throw err;
+                            loadProducts();
+                        }
+                    )
+                } else {
+                    console.log("Insufficient quantity");
+                }
             })
-            //checkInventory();
         });
+};
+
+
+function promptQuantity (){
+    inquirer
+    .prompt([
+    {
+        name: "quantity",
+        type: "input",
+        message: "How many items would you like to purchase?",
+        validate: function(value) {
+            if (isNaN(value) === false) {
+            return true;
+            }
+            return false;
+        }
+    }
+    ])
+    .then(function(answer) {
+        var query = "SELECT * FROM inventory WHERE ?";
+        connection.query(query, {id: answer.id }, function(err, res) {
+            if (err) throw err;
+            console.log(res[0].id);
+            console.table([0].quantity);
+
+        })
+        //checkInventory();
+    });
+
 
 
 }
