@@ -22,7 +22,7 @@ connection.connect(function(err) {
     displayHeader();
   });
 
-function displayHeader () {
+function displayHeader() {
 
     console.log(``);
     console.log(`(==================================================================)`);
@@ -38,7 +38,7 @@ function displayHeader () {
     inquirer
     .prompt({
       name: "action",
-      type: "rawlist",
+      type: "list",
       message: "What would you like to do?",
       // List a set of menu options:
     // View Products for Sale
@@ -49,7 +49,8 @@ function displayHeader () {
         "View Products for Sale",
         "View Low Inventory",
         "Add to Inventory",
-        "Add New Product"
+        "Add New Product",
+        "Exit"
       ]
     })
     .then(function(answer) {
@@ -69,9 +70,11 @@ function displayHeader () {
       case "Add New Product":
         addNewProduct();
         break;
+      case "Exit":
+          connection.end();
+          break;
       }
     });
-
 }
 
 function viewProducts(){
@@ -81,12 +84,23 @@ function viewProducts(){
         //displays items
         console.table(res);
         //the prompt the customer for an item
-        })
         displayHeader();
+    })
 };
 
 function lowInventory(){
     // list all items with an inventory count lower than five.
+    var query = "SELECT * FROM inventory";
+    var lowInv = [];
+    connection.query(query, function(err, res) {
+        if (err) throw err;
+        for (let i = 0; i < res.length; i++) {
+            if (res[i].quantity < 5) {
+            console.table(res[i]);
+            }
+        }
+        displayHeader();
+    })
 };
 
 function addInventory(){
