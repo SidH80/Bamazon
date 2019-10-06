@@ -12,9 +12,23 @@
 //initialize dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
+
+//initiate new table
+var table = new Table({
+    head: ['TH 1 label', 'TH 2 label', 'TH 3 label']
+  , colWidths: [20, 20, 20]
+});
+
+// table is an Array, so you can `push`, `unshift`, `splice` and friends
+table.push(
+    ['First value', 'Second value', 'Second value' ]
+  , ['First value', 'Second value', 'Second value']
+);
+
+console.log(table.toString());
 
 // initialize connection variable for mysql database
-
 var connection = mysql.createConnection ({
     host: "localhost",
     port: 3306,
@@ -32,14 +46,14 @@ connection.connect(function(err) {
   });
 
 function loadProducts() {
-    connection.query("SELECT id, product, department, price, quantity FROM inventory", function(err, res) {
+    connection.query("SELECT * FROM inventory", function(err, res) {
     if(err) throw err;
 
     console.log(``);
     console.log(`(==================================================================)`)
     console.log(`(==================================================================)`)
     console.log(``);
-    console.log(`                           Welcome to Bamazon!          `);
+    console.log(`                         Welcome to Bamazon!          `);
     console.log(``);
     console.log(`(==================================================================)`);
     console.log(`(==================================================================)`);
@@ -60,7 +74,7 @@ function promptCustomerForItem() {
         {
             name: "id",
             type: "input",
-            message: "Please enter the ID of the item you'd like to purchase",
+            message: "Please enter the ID of the item you'd like to purchase:",
             validate: function(value) {
                 if (isNaN(value) === false) {
                   return true;
@@ -81,12 +95,9 @@ function promptCustomerForItem() {
         }
         ])
         .then(function(answer) {
-            console.log(answer.id);
-            console.log(answer.quantity);
             var query = "SELECT * FROM inventory WHERE ?";
             connection.query(query, {id: answer.id }, function(err, res) {
                 if (err) throw err;
-                console.log(res[0].quantity);
                 if (answer.quantity <= res[0].quantity) {
                     console.log(`Your final price is $${parseFloat(answer.quantity * res[0].price)}. Purchase complete. Thank yor for shopping at Bamazon!`);
                     connection.query(
