@@ -101,9 +101,9 @@ function lowInventory(){
         for (let i = 0; i < res.length; i++) {
             if (res[i].quantity < 5) {
             lowInv.push(res[i]);
+            }
         }
         console.table(lowInv);
-        }
         start();
     })
 };

@@ -22,7 +22,7 @@ connection.connect(function(err) {
   });
 
 function loadProducts() {
-    connection.query("SELECT * FROM inventory", function(err, res) {
+    connection.query("SELECT id, product, department, price, quantity FROM inventory", function(err, res) {
     if(err) throw err;
 
     //Prints Store Header
@@ -63,7 +63,7 @@ function promptCustomerForItem() {
         .then(function(answer) {
             chosenItem = answer.id;
             //selects item id from the database
-            var query = "SELECT * FROM inventory WHERE ?";
+            var query = "SELECT id, product, department, price, quantity FROM inventory WHERE ?";
             connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
              console.table(res);
@@ -92,20 +92,20 @@ function promptQuantity (){
     .then(function(answer) {
 
         var query = "SELECT * FROM inventory WHERE ?";
-            connection.query(query, {id: chosenItem },
-                function(err, res) {
+            connection.query(query, {id: chosenItem }, function(err, res) {
                 if (err) throw err;
 
                 //if item is available then complete the purchase
                 if (answer.quantity <= res[0].quantity) {
-                    console.log(`${answer.quantity} ${res[0].product}(s) purchased! Your final price is $${parseFloat(answer.quantity * res[0].price)}. Thank yor for shopping at Bamazon!`);
+                    console.log(`${answer.quantity} ${res[0].product}(s) purchased! Your final price is $${parseInt(answer.quantity * res[0].price)}. Thank yor for shopping at Bamazon!`);
 
                     //updates the quantity available in inventory
                     connection.query(
                         "UPDATE inventory SET ? WHERE ?",
                         [
                             {
-                                quantity: (res[0].quantity - answer.quantity)
+                                quantity: (res[0].quantity - answer.quantity),
+                                product_sales: res[0].product_sales + (parseInt(answer.quantity * res[0].price))
                             },
                             {
                                 id: chosenItem
@@ -119,9 +119,10 @@ function promptQuantity (){
 
                 // if quantity unavailable then prompt quantity again
                 } else {
-                    console.log(`Insufficient quantity. Please select a valid quantity.`);
+                    console.log(`Insufficient quantity. Please select a valid id or number.`);
                     promptQuantity();
                 }
             })//checkInventory();
     });
+
 }
