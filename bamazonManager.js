@@ -88,8 +88,8 @@ function viewProducts(){
         //displays items
         console.table(res);
         //the prompt the customer for an item
+        start();
     })
-    start();
 };
 
 function lowInventory(){
@@ -148,6 +148,7 @@ function addInventory(){
         connection.query(query, {id: chosenItem },
             function(err, res) {
             if (err) throw err;
+
                 //updates the quantity available in inventory
                 connection.query(
                     "UPDATE inventory SET ? WHERE ?",
@@ -172,6 +173,58 @@ function addInventory(){
 };
 
 function addNewProduct(){
+    inquirer
+        .prompt([
+            {
+                name: "product",
+                type: "input",
+                message: "What new product you would like to submit?"
+            },
+            {
+                name: "department",
+                type: "input",
+                message: "In what department would you like to place your product?"
+            },
+            {
+                name: "price",
+                type: "input",
+                message: "Price?",
+                validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+                }
+            },
+            {
+                name: "quantity",
+                type: "input",
+                message: "How many products are you adding?",
+                validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+                }
+            }
+        ])
+        .then(function(answer) {
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                "INSERT INTO inventory SET ?",
+                {
+                product: answer.product,
+                department: answer.department,
+                price: answer.price,
+                quantity: answer.quantity
+                },
+                function(err, res) {
+                if (err) throw err;
+                console.log(`You have added ${answer.quantity} ${answer.product}(s) successfully!`);
+                // re-prompt the user for if they want to bid or post
+                start();
+                }
+            );
+        });
     // add a completely new product to the store.
-    start();
 };
