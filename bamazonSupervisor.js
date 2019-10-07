@@ -1,12 +1,3 @@
-// Create a new MySQL table called departments. Your table should include the following columns:
-// department_id
-// department_name
-// over_head_costs (A dummy number you set for each department)
-
-// Modify the products table so that there's a product_sales column, and modify your bamazonCustomer.js app so that when a customer purchases anything from the store, the price of the product multiplied by the quantity purchased is added to the product's product_sales column.
-
-// Make sure your app still updates the inventory listed in the products column.
-
 //initialize dependencies
 var mysql = require("mysql");
 var inquirer = require("inquirer");
@@ -45,6 +36,36 @@ function displayHeader() {
     console.log(``);
 }
 
+function start() {
+    displayHeader();
+
+    inquirer
+    .prompt({
+      name: "action",
+      type: "list",
+      message: "What would you like to do?",
+      choices: [
+        "View Products for Sales By Department",
+        "Create New Department",
+        "Exit"
+      ]
+    })
+    .then(function(answer) {
+      switch (answer.action) {
+      case "View Products for Sales By Department":
+        viewProductSalesDepartment();
+        break;
+
+      case "Create New Department":
+        createNewDept();
+        break;
+
+      case "Exit":
+          connection.end();
+          break;
+      }
+    });
+}
 
 // Create another Node app called bamazonSupervisor.js. Running this application will list a set of menu options:
 

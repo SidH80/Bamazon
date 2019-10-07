@@ -122,7 +122,7 @@ function promptQuantity (){
                     console.log(`Insufficient quantity. Please select a valid id or number.`);
                     promptQuantity();
                 }
-            })//checkInventory();
+            })
     });
 
 }
