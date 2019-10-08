@@ -5,28 +5,23 @@
 ### Below are snapshots of how Bamazon works works!
 
 *Bamazon will allow a customer to chose an item to purchase
+
 * It will calculate the price
 * It will update inventory levels
 
-![Spotify](assets/spotify-this.gif)
+![Customer Terminal](images/cust1.PNG)
 
-LIRI will search OMDB for movie titles and information by typing
-* movie-this
-* movie-name
+Bamazon Manager Terminal will allow a user to
 
-![Spotify](assets/movie-this.gif)
+* view inventory product data and sales
+* update and ajust inventory quantities
 
-LIRI will search concert location, date and time using Bands In Town API by typing
-* concert-this
-* artist-name
+![Manager Terminal](images/manadd1.jpg)
+![Manager Terminal](images/manadd2.jpg)
 
-![Spotify](assets/concert-this.gif)
+Bamazon will allow Supervisors to view:
 
-LIRI will also read and execute commands in a separate text file by typing
-* do-what-it-says
+* Meta-data
+* Add additional departments
 
-![Spotify](assets/do-what-it-says.gif)
-![Spotify](assets/do-what-it-says2.gif)
-
-### Bonus
-* In Addition, LIRI will log your searched to a text file.
+![Supervisor Terminal](images/super1.jpg)
