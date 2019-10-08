@@ -72,8 +72,8 @@ function start() {
 
 function viewProductSalesDepartment(){
 
-   var querySelect = "SELECT departments.dept_id, inventory.department, departments.over_head_costs, inventory.product_sales FROM inventory RIGHT JOIN departments ON inventory.department = departments.dept_name GROUP BY departments.dept_id";
-   // View Product Sales by Department
+   var querySelect = "SELECT departments.dept_id, inventory.department, departments.over_head_costs, inventory.product_sales, (inventory.product_sales - departments.over_head_costs) AS total_profit FROM inventory RIGHT JOIN departments ON inventory.department = departments.dept_name GROUP BY departments.dept_id";
+   // View Product Sales by Department dynamically created total-profit
    //var query = "SELECT dept_name, product_sales, over_head_costs, (product_sales - over_head_costs) AS total_profit FROM departments";
    connection.query(querySelect, function(err, res) {
        if (err) throw err;
