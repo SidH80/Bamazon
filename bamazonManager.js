@@ -55,6 +55,7 @@ function start() {
     .then(function(answer) {
       switch (answer.action) {
       case "View Products for Sale":
+        console.log("You chose View Products for Sale");
         viewProducts();
         break;
 
