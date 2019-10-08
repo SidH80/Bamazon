@@ -25,15 +25,16 @@ connection.connect(function(err) {
 function displayHeader() {
 
     console.log(``);
-    console.log(`(==================================================================)`);
-    console.log(`(==================================================================)`);
+    console.log(`(==========================================================================)`);
+    console.log(`(==========================================================================)`);
     console.log(``);
-    console.log(`                              Bamazon!                 `);
-    console.log(`                          Supervisor Terminal             `);
+    console.log(`                                   Bamazon!                 `);
+    console.log(`                             Supervisor Terminal             `);
     console.log(``);
-    console.log(`(==================================================================)`);
-    console.log(`(==================================================================)`);
+    console.log(`(==========================================================================)`);
+    console.log(`(==========================================================================)`);
     console.log(``);
+
 }
 
 function start() {
@@ -60,38 +61,31 @@ function start() {
         createNewDept();
         break;
 
-      case "Exit":
-          connection.end();
-          break;
+      default:
+        connection.end();
+        break;
       }
     });
-}
+};
 
 // Create another Node app called bamazonSupervisor.js. Running this application will list a set of menu options:
 
 function viewProductSalesDepartment(){
+
+   //var query = "SELECT dept_id, dept_name, over_head_costs FROM inventory LEFT JOIN inventory ON inventory.department = departments.dept_name GROUP BY dept_id, dept_name, over_head_costs";
    // View Product Sales by Department
-   // When a supervisor selects View Product Sales by Department, the app should display a summarized table in their terminal/bash window. Use the table below as a guide.
-   var query = "SELECT product_sales, over_head_costs, (product_sales - over_head_costs) AS total_profit from departments";
+   var query = "SELECT dept_name, product_sales, over_head_costs, (product_sales - over_head_costs) AS total_profit FROM departments";
    connection.query(query, function(err, res) {
        if (err) throw err;
-        for (let i = 0; i < res.length; i++) {
-            console.log(i);
-            connection.query(
-                "UPDATE department SET total_profit = (product_sales - over_head_costs)", function(error) {
-                    if (error) throw err;
-                }
-            )
-        }
-    console.table(res);
-    start();
-   })
-
+       console.table(res);
+       start();
+      })
    // The total_profit column should be calculated on the fly using the difference between over_head_costs and product_sales. total_profit should not be stored in any database. You should use a custom alias.
-}
+};
 
 function createNewDept (){
     // Create New Department
+
 }
 
 

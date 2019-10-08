@@ -14,7 +14,6 @@ var connection = mysql.createConnection ({
 })
 
 //create connection with the server and load the product data
-
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
@@ -30,11 +29,13 @@ function loadProducts() {
     console.log(`(==================================================================)`)
     console.log(`(==================================================================)`)
     console.log(``);
-    console.log(`                         Welcome to Bamazon!          `);
+    console.log(`                         Welcome to BAMAZON!          `);
     console.log(``);
     console.log(`(==================================================================)`);
     console.log(`(==================================================================)`);
     console.log(``);
+
+
 
     //displays items
     console.table(res);
@@ -44,7 +45,6 @@ function loadProducts() {
 }
 
 function promptCustomerForItem() {
-
     //Ask the customer the ID of the product they would like to buy.
     inquirer
         .prompt([
@@ -70,9 +70,7 @@ function promptCustomerForItem() {
              promptQuantity();
             })
         });
-
 };
-
 
 function promptQuantity (){
     inquirer
@@ -116,7 +114,6 @@ function promptQuantity (){
                             loadProducts();
                         }
                     )
-
                 // if quantity unavailable then prompt quantity again
                 } else {
                     console.log(`Insufficient quantity. Please select a valid id or number.`);
@@ -124,5 +121,4 @@ function promptQuantity (){
                 }
             })
     });
-
 }

@@ -18,7 +18,6 @@ CREATE TABLE departments (
     dept_name VARCHAR (255) NOT NULL,
     over_head_costs DECIMAL(10,3) NOT NULL,
     product_sales INT(10) NOT NULL,
-    total_profit DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (dept_id)
 );
 
@@ -55,8 +54,8 @@ values("Jeans", "Clothing", 120.99, 11);
 insert into inventory (product, department, price, quantity)
 values("Pumps", "Shoes", 199.99, 22);
 
-insert into departments (department_name, over_head_costs, price, total_profit)
-values("Electronics", 10000, 20000, 10000);
+insert into departments (dept_name, over_head_costs, product_sales)
+values("Electronics", 10000, 20000);
 
-insert into departments (department_name, over_head_costs, price, total_profit)
-values("Automobiles", 200000, 300000, 150000);
+insert into departments (dept_name, over_head_costs, product_sales)
+values("Automobiles", 200000, 300000);

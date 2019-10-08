@@ -208,10 +208,10 @@ function addNewProduct(){
             connection.query(
                 "INSERT INTO inventory SET ?",
                 {
-                product: answer.product,
-                department: answer.department,
-                price: answer.price,
-                quantity: answer.quantity
+                    product: answer.product,
+                    department: answer.department,
+                    price: answer.price,
+                    quantity: answer.quantity
                 },
                 function(err, res) {
                 if (err) throw err;
@@ -221,5 +221,4 @@ function addNewProduct(){
                 }
             );
         });
-    // add a completely new product to the store.
 };
