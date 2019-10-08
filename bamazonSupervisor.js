@@ -85,8 +85,41 @@ function viewProductSalesDepartment(){
 
 function createNewDept (){
     // Create New Department
+    inquirer
+    .prompt([
+        {
+            name: "dept",
+            type: "input",
+            message: "What department you would like to submit?"
+        },
+        {
+            name: "overHead",
+            type: "input",
+            message: "What is the overhead cost?",
+            validate: function(value) {
+              if (isNaN(value) === false) {
+                  return true;
+              }
+              return false;
+              }
+        }
+    ])
+    .then(function(answer) {
+        // when finished prompting, insert a new item into the db with that info
+        connection.query(
+            "INSERT INTO departments SET ?",
+            {
+                dept_name: answer.dept,
+                over_head_costs: answer.overHead,
+                product_sales: 0
+            },
+            function(err, res) {
+            if (err) throw err;
+            console.log(`The ${answer.dept} has been added successfully!`);
+
+            start();
+            }
+        );
+    });
 
 }
-
-
-// If you can't get the table to display properly after a few hours, then feel free to go back and just add total_profit to the departments table.
